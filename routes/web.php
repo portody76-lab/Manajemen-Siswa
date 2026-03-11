@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\PengumpulanController;
+use App\Http\Controllers\GuruController;
 
 // Halaman awal langsung ke login
 Route::get('/', function () {
@@ -21,26 +22,30 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register.s
 
 // ─── Guru ────────────────────────────────────────────
 Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(function () {
-    Route::get('/dashboard', [TugasController::class, 'dashboardGuru'])->name('dashboard');
 
-    // Taruh route spesifik di atas resource untuk hindari konflik wildcard
+    // Dashboard
+    Route::get('/dashboard', [GuruController::class, 'dashboard'])->name('dashboard');
+
+    // Kelola tugas (spesifik di atas resource untuk hindari konflik wildcard)
     Route::get('/tugas/kiriman/{pengumpulan}/download', [PengumpulanController::class, 'download'])->name('kiriman.download');
     Route::get('/tugas/{tugas}/kiriman', [PengumpulanController::class, 'lihatKiriman'])->name('tugas.kiriman');
-
     Route::resource('/tugas', TugasController::class);
+
+    // Kelola siswa
+    Route::get('/siswa', [GuruController::class, 'siswaIndex'])->name('siswa.index');
+    Route::get('/siswa/{siswa}/edit', [GuruController::class, 'siswaEdit'])->name('siswa.edit');
+    Route::put('/siswa/{siswa}', [GuruController::class, 'siswaUpdate'])->name('siswa.update');
+    Route::delete('/siswa/{siswa}', [GuruController::class, 'siswaDestroy'])->name('siswa.destroy');
+
+    // Lihat semua tugas & pengumpulan
+    Route::get('/semua-tugas', [GuruController::class, 'tugasIndex'])->name('semua-tugas.index');
+    Route::get('/semua-pengumpulan', [GuruController::class, 'pengumpulanIndex'])->name('semua-pengumpulan.index');
 });
 
 // ─── Siswa ───────────────────────────────────────────
 Route::middleware(['auth', 'role:siswa'])->prefix('siswa')->name('siswa.')->group(function () {
     Route::get('/dashboard', [TugasController::class, 'dashboardSiswa'])->name('dashboard');
+    Route::get('/home', function () { return view('user.home'); })->name('home');
     Route::get('/tugas', [TugasController::class, 'indexSiswa'])->name('tugas.index');
     Route::post('/tugas/{tugas}/kirim', [PengumpulanController::class, 'kirim'])->name('tugas.kirim');
-});
-
-Route::get('/user/home', function () {
-    return view('user.home');
-});
-
-Route::get('/user/', function () {
-    return view('user.home');
 });

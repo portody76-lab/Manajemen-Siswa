@@ -8,6 +8,8 @@ use App\Models\User;
 
 class Pengumpulan extends Model
 {
+    protected $table = 'pengumpulan'; // ← tambahkan ini
+
     protected $fillable = ['tugas_id', 'siswa_id', 'file_path', 'file_type', 'catatan', 'status'];
 
     public function tugas()

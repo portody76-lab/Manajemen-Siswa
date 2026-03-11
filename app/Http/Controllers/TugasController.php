@@ -22,12 +22,12 @@ class TugasController extends Controller
 
     // Daftar tugas guru (resource index)
     public function index()
-    {
-        $tugas = Tugas::where('guru_id', Auth::id())
-                      ->orderBy('created_at', 'desc')
-                      ->get();
+{
+    $tugas = Tugas::where('guru_id', Auth::id())
+                  ->orderBy('created_at', 'desc')
+                  ->paginate(10); // ← ganti ke paginate
 
-        return view('guru.tugas.index', compact('tugas'));
+    return view('guru.tugas.index', compact('tugas'));
     }
 
     // Form buat tugas baru
