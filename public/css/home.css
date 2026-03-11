@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #1a67ca; /* Warna background luar seperti di Figma */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.main-container {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 1000px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding-bottom: 30px;
+}
+
+/* Header */
+.header {
+    background-color: #e0e0e0;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ccc;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-bar {
+    width: 120px;
+    height: 30px;
+    background: white;
+    border-radius: 15px;
+    border: 1px solid #bbb;
+}
+
+/* Banner */
+.banner {
+    background-color: #d9d9d9;
+    margin: 20px 30px;
+    padding: 25px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.banner h1 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+/* Navigasi Tabs */
+.tabs-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 30px;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    padding: 10px 25px;
+    border: 1px solid #333;
+    background: #d9d9d9;
+    border-radius: 20px;
+    cursor: pointer;
+    min-width: 120px;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    background: #bbb;
+    font-weight: bold;
+}
+
+.tab-btn:hover {
+    background: #ccc;
+}
+
+/* Grid System */
+.stats-grid, .structure-grid {
+    display: grid;
+    gap: 20px;
+    padding: 0 30px;
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.structure-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.section-title {
+    padding-left: 30px;
+    margin-bottom: 15px;
+    color: #555;
+    font-weight: 500;
+}
+
+/* Cards */
+.card {
+    background-color: #d9d9d9;
+    border: 1px solid #999;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #333;
+    padding: 20px;
+}
+
+.card-small {
+    height: 100px;
+}
+
+.card-large {
+    height: 150px;
+    font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stats-grid, .structure-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .tabs-nav {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
