@@ -8,6 +8,8 @@ use App\Models\Pengumpulan;
 
 class Tugas extends Model
 {
+    protected $table = 'tugas';
+    
     protected $fillable = ['guru_id', 'judul', 'deskripsi', 'mata_pelajaran', 'kelas_target', 'deadline'];
 
     protected $casts = ['deadline' => 'datetime'];

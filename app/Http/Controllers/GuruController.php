@@ -16,9 +16,9 @@ class GuruController extends Controller
         $search = $request->input('search');
 
         $users = User::when($search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
-            })
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        })
             ->orderBy('role')
             ->paginate(10)
             ->withQueryString();
@@ -45,8 +45,8 @@ class GuruController extends Controller
         $siswa = User::where('role', 'siswa')
             ->when($search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%")
-                      ->orWhere('kelas', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('kelas', 'like', "%{$search}%");
             })
             ->orderBy('kelas')
             ->orderBy('absen')
@@ -82,7 +82,7 @@ class GuruController extends Controller
         $siswa->update($request->only('name', 'email', 'absen', 'kelas'));
 
         return redirect()->route('guru.siswa.index')
-                         ->with('success', 'Data siswa berhasil diperbarui.');
+            ->with('success', 'Data siswa berhasil diperbarui.');
     }
 
     // Hapus siswa
@@ -91,7 +91,7 @@ class GuruController extends Controller
         $siswa->delete();
 
         return redirect()->route('guru.siswa.index')
-                         ->with('success', 'Siswa berhasil dihapus.');
+            ->with('success', 'Siswa berhasil dihapus.');
     }
 
     // ─── Semua Tugas ─────────────────────────────────────
@@ -103,8 +103,8 @@ class GuruController extends Controller
         $tugas = Tugas::with('guru')
             ->when($search, function ($query, $search) {
                 $query->where('judul', 'like', "%{$search}%")
-                      ->orWhere('mata_pelajaran', 'like', "%{$search}%")
-                      ->orWhere('kelas_target', 'like', "%{$search}%");
+                    ->orWhere('mata_pelajaran', 'like', "%{$search}%")
+                    ->orWhere('kelas_target', 'like', "%{$search}%");
             })
             ->orderBy('created_at', 'desc')
             ->paginate(15)
@@ -117,20 +117,17 @@ class GuruController extends Controller
 
     public function pengumpulanIndex(Request $request)
     {
-        $search = $request->input('search');
+        $query = Pengumpulan::with(['siswa', 'tugas']);
 
-        $pengumpulan = Pengumpulan::with(['siswa', 'tugas'])
-            ->when($search, function ($query, $search) {
-                $query->whereHas('siswa', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                })->orWhereHas('tugas', function ($q) use ($search) {
-                    $q->where('judul', 'like', "%{$search}%");
-                });
-            })
-            ->orderBy('submitted_at', 'desc')
-            ->paginate(15)
-            ->withQueryString();
+        if ($request->search) {
+            $query->whereHas('siswa', fn($q) => $q->where('name', 'like', '%' . $request->search . '%'))
+                ->orWhereHas('tugas', fn($q) => $q->where('judul', 'like', '%' . $request->search . '%'));
+        }
 
-        return view('guru.semua-pengumpulan.index', compact('pengumpulan'));
+        $pengumpulan    = $query->latest('submitted_at')->paginate(15);
+        $totalTepat     = Pengumpulan::where('status', 'tepat_waktu')->count();
+        $totalTerlambat = Pengumpulan::where('status', 'terlambat')->count();
+
+        return view('guru.semua-pengumpulan.index', compact('pengumpulan', 'totalTepat', 'totalTerlambat'));
     }
 }
