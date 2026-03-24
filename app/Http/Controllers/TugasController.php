@@ -140,6 +140,6 @@ class TugasController extends Controller
             ->orderBy('deadline', 'asc')
             ->get();
 
-        return view('siswa.tugas.index', compact('tugas'));
+        return view('siswa.tugas', compact('tugas'));
     }
 }
