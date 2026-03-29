@@ -257,7 +257,7 @@
 
 {{-- ── Sidebar ── --}}
 <div class="sidebar">
-  <div >
+  <div>
     <img src="{{ asset('img/logodwira.png') }}" alt="" width="150px">
   </div>
 

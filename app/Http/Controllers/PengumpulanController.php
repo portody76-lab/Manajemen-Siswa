@@ -11,7 +11,24 @@ use Illuminate\Support\Facades\Storage;
 class PengumpulanController extends Controller
 {
     // ─── SISWA ───────────────────────────────────────────
+    // Tampilkan form kirim tugas
+    public function showKirim($id)
+    {
+        $tugas = Tugas::findOrFail($id);
 
+        // Pastikan tugas memang untuk kelas siswa ini
+        if ($tugas->kelas_target !== Auth::user()->kelas) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        // Kalau sudah dikumpulkan, redirect balik
+        if ($tugas->sudahDikumpulkan(Auth::id())) {
+            return redirect()->route('siswa.tugas.index')
+                ->with('error', 'Kamu sudah mengumpulkan tugas ini.');
+        }
+
+        return view('siswa.kirim', compact('tugas'));
+    }
     // Siswa kirim tugas (upload file)
     public function kirim(Request $request, Tugas $tugas)
     {

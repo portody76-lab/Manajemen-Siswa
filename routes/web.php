@@ -45,12 +45,11 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
 // ─── Siswa ───────────────────────────────────────────
 Route::middleware(['auth', 'role:siswa'])->prefix('siswa')->name('siswa.')->group(function () {
     Route::get('/dashboard', [TugasController::class, 'dashboardSiswa'])->name('dashboard');
-    Route::get('/home', function () { return view('user.home'); })->name('home');
+    Route::get('/home', function () {
+        return view('user.home');
+    })->name('home');
     Route::get('/tugas', [TugasController::class, 'indexSiswa'])->name('tugas.index');
-    Route::post('/tugas/{tugas}/kirim', [PengumpulanController::class, 'kirim'])->name('tugas.kirim');
+    
+    Route::get('/tugas/{id}/kirim', [PengumpulanController::class, 'showKirim'])->name('tugas.kirim');
+    Route::post('/tugas/{tugas}/kirim', [PengumpulanController::class, 'kirim'])->name('tugas.kirim.store');
 });
-
-Route::get('/tugas',          [TugasController::class, 'index'])->name('tugas.index');
-    Route::get('/tugas/create',   [TugasController::class, 'create'])->name('tugas.create');
-    Route::post('/tugas',         [TugasController::class, 'store'])->name('tugas.store');
-    Route::get('/tugas/{tugas}',  [TugasController::class, 'show'])->name('tugas.show');

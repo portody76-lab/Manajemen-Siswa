@@ -96,9 +96,16 @@
       {{-- Mata Pelajaran --}}
       <div class="mb-3">
         <label for="mata_pelajaran" class="form-label">Mata Pelajaran</label>
-        <input type="text" id="mata_pelajaran" name="mata_pelajaran" value="{{ old('mata_pelajaran') }}"
-          class="form-control @error('mata_pelajaran') is-invalid @enderror"
-          placeholder="Contoh: Matematika">
+        <select id="mata_pelajaran" name="mata_pelajaran"
+          class="form-select @error('mata_pelajaran') is-invalid @enderror">
+          <option value="">-- Pilih Mata Pelajaran --</option>
+          @foreach($mataPelajaran as $mp)
+            <option value="{{ $mp->nama }}"
+              {{ old('mata_pelajaran') === $mp->nama ? 'selected' : '' }}>
+              {{ $mp->nama }}
+            </option>
+          @endforeach
+        </select>
         @error('mata_pelajaran') <div class="error-text">{{ $message }}</div> @enderror
       </div>
 

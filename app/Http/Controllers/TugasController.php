@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tugas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\MataPelajaran;
 
 class TugasController extends Controller
 {
@@ -33,7 +34,8 @@ class TugasController extends Controller
     // Form buat tugas baru
     public function create()
     {
-        return view('guru.tugas.create');
+        $mataPelajaran = MataPelajaran::orderBy('nama')->get();
+        return view('guru.tugas.create', compact('mataPelajaran'));
     }
 
     // Simpan tugas baru
@@ -70,13 +72,14 @@ class TugasController extends Controller
     // Form edit tugas
     public function edit($id)
     {
-        $tugas = Tugas::findOrFail($id);
+        $tugas         = Tugas::findOrFail($id);
+        $mataPelajaran = MataPelajaran::orderBy('nama')->get(); // ← tambahkan ini
 
         if ($tugas->guru_id != Auth::id()) {
             abort(403, 'Akses ditolak.');
         }
 
-        return view('guru.tugas.edit', compact('tugas'));
+        return view('guru.tugas.edit', compact('tugas', 'mataPelajaran')); // ← tambahkan 'mataPelajaran'
     }
 
     public function update(Request $request, $id)
@@ -134,11 +137,21 @@ class TugasController extends Controller
     }
 
     // Daftar tugas siswa
-    public function indexSiswa()
+    public function indexSiswa(Request $request)
     {
-        $tugas = Tugas::where('kelas_target', Auth::user()->kelas)
-            ->orderBy('deadline', 'asc')
-            ->get();
+        $query = Tugas::where('kelas_target', Auth::user()->kelas)
+            ->orderBy('deadline', 'asc');
+
+        $tugas = $query->get();
+
+        // Filter
+        if ($request->filter === 'belum') {
+            $tugas = $tugas->filter(fn($t) => !$t->sudahDikumpulkan(Auth::id()))->values();
+        } elseif ($request->filter === 'sudah') {
+            $tugas = $tugas->filter(fn($t) => $t->sudahDikumpulkan(Auth::id()))->values();
+        } elseif ($request->filter === 'aktif') {
+            $tugas = $tugas->filter(fn($t) => now()->lt($t->deadline))->values();
+        }
 
         return view('siswa.tugas', compact('tugas'));
     }

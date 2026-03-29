@@ -225,7 +225,9 @@
 
 {{-- ── Sidebar ── --}}
 <div class="sidebar">
-  <div class="sidebar-logo-placeholder">DWIRA<br>HARAPAN</div>
+  <div>
+    <img src="{{ asset('img/logodwira.png') }}" alt="" width="150px">
+  </div>
   <nav style="width:100%;">
     <a href="{{ route('guru.dashboard') }}" class="nav-item-link">🏠 Dashboard</a>
     <a href="{{ route('guru.tugas.index') }}" class="nav-item-link active">📋 Tugas Saya</a>
