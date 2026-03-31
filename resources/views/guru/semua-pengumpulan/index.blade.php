@@ -59,13 +59,14 @@
     <img src="{{ asset('img/logodwira.png') }}" alt="" width="150px">
   </div>
   <nav style="width:100%;">
-    <a href="{{ route('guru.dashboard') }}" class="nav-item-link">🏠 Dashboard</a>
-    <a href="{{ route('guru.tugas.index') }}" class="nav-item-link">📋 Tugas Saya</a>
-    <a href="{{ route('guru.tugas.create') }}" class="nav-item-link">➕ Tambah Tugas</a>
-    <a href="{{ route('guru.siswa.index') }}" class="nav-item-link">👥 Data Siswa</a>
-    <a href="{{ route('guru.semua-tugas.index') }}" class="nav-item-link">📚 Semua Tugas</a>
-    <a href="{{ route('guru.semua-pengumpulan.index') }}" class="nav-item-link active">📥 Pengumpulan</a>
-  </nav>
+      <a href="{{ route('guru.dashboard') }}" class="nav-item-link">🏠 Dashboard</a>
+      <a href="{{ route('guru.buat-akun') }}" class="nav-item-link">➕ Tambahkan Akun</a>
+      <a href="{{ route('guru.siswa.index') }}" class="nav-item-link">👥 Data Siswa</a>
+      <a href="{{ route('guru.tugas.index') }}" class="nav-item-link">📋 Tugas Saya</a>
+      <a href="{{ route('guru.tugas.create') }}" class="nav-item-link">➕ Tambah Tugas</a>
+      <a href="{{ route('guru.semua-tugas.index') }}" class="nav-item-link">📚 Semua Tugas</a>
+      <a href="{{ route('guru.semua-pengumpulan.index') }}" class="nav-item-link active">📥 Pengumpulan</a>
+    </nav>
   <div class="sidebar-bottom">
     <form action="{{ route('logout') }}" method="POST">
       @csrf

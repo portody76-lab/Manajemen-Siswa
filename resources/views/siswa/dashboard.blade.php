@@ -392,7 +392,7 @@
       <div class="stat-value">{{ $totalMapel }}</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Tugas Aktif</div>
+      <div class="stat-label">Total Tugas Diberikan</div>
       <div class="stat-value">{{ $totalTugas }}</div>
     </div>
     <div class="stat-card">
@@ -401,22 +401,7 @@
     </div>
   </div>
 
-  {{-- Struktur Kelas --}}
-  <p class="section-title">Struktur Kelas</p>
-  <div class="structure-grid">
-    <div class="struktur-card">
-      <div class="role">Ketua Kelas</div>
-      <div class="name">—</div>
-    </div>
-    <div class="struktur-card">
-      <div class="role">Wali Kelas</div>
-      <div class="name">—</div>
-    </div>
-    <div class="struktur-card">
-      <div class="role">Wakil Ketua</div>
-      <div class="name">—</div>
-    </div>
-  </div>
+  
 
   {{-- Tugas Terbaru --}}
   <p class="section-title">📌 Tugas Terbaru</p>

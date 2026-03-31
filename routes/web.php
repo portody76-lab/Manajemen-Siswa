@@ -37,6 +37,10 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::put('/siswa/{siswa}', [GuruController::class, 'siswaUpdate'])->name('siswa.update');
     Route::delete('/siswa/{siswa}', [GuruController::class, 'siswaDestroy'])->name('siswa.destroy');
 
+    // Pembuatan Akun
+    Route::get('/buat-akun', [GuruController::class, 'buatAkunIndex'])->name('buat-akun');
+    Route::post('/buat-akun', [GuruController::class, 'buatAkunStore'])->name('buat-akun.store');
+
     // Lihat semua tugas & pengumpulan
     Route::get('/semua-tugas', [GuruController::class, 'tugasIndex'])->name('semua-tugas.index');
     Route::get('/semua-pengumpulan', [GuruController::class, 'pengumpulanIndex'])->name('semua-pengumpulan.index');
@@ -49,7 +53,7 @@ Route::middleware(['auth', 'role:siswa'])->prefix('siswa')->name('siswa.')->grou
         return view('user.home');
     })->name('home');
     Route::get('/tugas', [TugasController::class, 'indexSiswa'])->name('tugas.index');
-    
+
     Route::get('/tugas/{id}/kirim', [PengumpulanController::class, 'showKirim'])->name('tugas.kirim');
     Route::post('/tugas/{tugas}/kirim', [PengumpulanController::class, 'kirim'])->name('tugas.kirim.store');
 });

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Tugas;
 use App\Models\Pengumpulan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class GuruController extends Controller
 {
@@ -54,6 +55,37 @@ class GuruController extends Controller
             ->withQueryString();
 
         return view('guru.siswa.index', compact('siswa'));
+    }
+
+    // Form buat akun baru
+    public function buatAkunIndex()
+    {
+        return view('guru.buat-akun');
+    }
+
+    public function buatAkunStore(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:pengguna,email',
+            'password' => 'required|min:8|confirmed',
+            'role'     => 'required|in:guru,siswa',
+            'absen'    => 'nullable|integer',
+            'tingkat'  => 'nullable|string',
+            'kelas'    => 'nullable|string',
+        ]);
+
+        User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'role'     => $request->role,
+            'absen'    => $request->role === 'siswa' ? $request->absen : null,
+            'kelas'    => $request->role === 'siswa' ? $request->kelas : null,
+        ]);
+
+        return redirect()->route('guru.buat-akun')
+            ->with('success', 'Akun berhasil dibuat!');
     }
 
     // Form edit siswa

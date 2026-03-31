@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    * {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 
     body {
       background: #f0f6ff;
@@ -26,7 +29,9 @@
       align-items: center;
       padding: 1.5rem 0.75rem;
       position: fixed;
-      top: 0; left: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      bottom: 0;
     }
 
     .sidebar-logo-placeholder {
@@ -185,7 +190,10 @@
       background: #fff;
     }
 
-    table { width: 100%; border-collapse: collapse; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
     thead th {
       font-size: 0.8rem;
@@ -204,8 +212,13 @@
       border-bottom: 1px solid #eaf4fc;
     }
 
-    tbody tr:last-child td { border-bottom: none; }
-    tbody tr:hover td { background: #f5faff; }
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover td {
+      background: #f5faff;
+    }
 
     .badge-role {
       font-size: 0.75rem;
@@ -214,8 +227,15 @@
       border-radius: 99px;
     }
 
-    .badge-guru  { background: #d1fae5; color: #065f46; }
-    .badge-siswa { background: #dbeafe; color: #1e40af; }
+    .badge-guru {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-siswa {
+      background: #dbeafe;
+      color: #1e40af;
+    }
 
     .btn-edit {
       background: #1a6fc4;
@@ -228,7 +248,11 @@
       text-decoration: none;
       transition: background 0.2s;
     }
-    .btn-edit:hover { background: #155da0; color: white; }
+
+    .btn-edit:hover {
+      background: #155da0;
+      color: white;
+    }
 
     .btn-delete {
       background: #dc3545;
@@ -241,7 +265,10 @@
       cursor: pointer;
       transition: background 0.2s;
     }
-    .btn-delete:hover { background: #b02a37; }
+
+    .btn-delete:hover {
+      background: #b02a37;
+    }
 
     .pagination-wrap {
       display: flex;
@@ -253,133 +280,135 @@
     }
   </style>
 </head>
+
 <body>
 
-{{-- ── Sidebar ── --}}
-<div class="sidebar">
-  <div>
-    <img src="{{ asset('img/logodwira.png') }}" alt="" width="150px">
+  {{-- ── Sidebar ── --}}
+  <div class="sidebar">
+    <div>
+      <img src="{{ asset('img/logodwira.png') }}" alt="" width="150px">
+    </div>
+
+    <nav style="width:100%;">
+      <a href="{{ route('guru.dashboard') }}" class="nav-item-link active">🏠 Dashboard</a>
+      <a href="{{ route('guru.buat-akun') }}" class="nav-item-link">➕ Tambahkan Akun</a>
+      <a href="{{ route('guru.siswa.index') }}" class="nav-item-link">👥 Data Siswa</a>
+      <a href="{{ route('guru.tugas.index') }}" class="nav-item-link">📋 Tugas Saya</a>
+      <a href="{{ route('guru.tugas.create') }}" class="nav-item-link">➕ Tambah Tugas</a>
+      <a href="{{ route('guru.semua-tugas.index') }}" class="nav-item-link">📚 Semua Tugas</a>
+      <a href="{{ route('guru.semua-pengumpulan.index') }}" class="nav-item-link">📥 Pengumpulan</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit" class="btn-logout">Log Out</button>
+      </form>
+    </div>
   </div>
 
-  <nav style="width:100%;">
-    <a href="{{ route('guru.dashboard') }}" class="nav-item-link active">🏠 Dashboard</a>
-    <a href="{{ route('guru.tugas.index') }}" class="nav-item-link">📋 Tugas Saya</a>
-    <a href="{{ route('guru.tugas.create') }}" class="nav-item-link">➕ Tambah Tugas</a>
-    <a href="{{ route('guru.siswa.index') }}" class="nav-item-link">👥 Data Siswa</a>
-    <a href="{{ route('guru.semua-tugas.index') }}" class="nav-item-link">📚 Semua Tugas</a>
-    <a href="{{ route('guru.semua-pengumpulan.index') }}" class="nav-item-link">📥 Pengumpulan</a>
-  </nav>
+  {{-- ── Main Content ── --}}
+  <div class="main-content">
 
-  <div class="sidebar-bottom">
-    <form action="{{ route('logout') }}" method="POST">
-      @csrf
-      <button type="submit" class="btn-logout">Log Out</button>
-    </form>
-  </div>
-</div>
+    <div class="page-header">
+      <span style="font-size:1.6rem;">👤</span>
+      <h1>Dashboard Guru</h1>
+    </div>
 
-{{-- ── Main Content ── --}}
-<div class="main-content">
-
-  <div class="page-header">
-    <span style="font-size:1.6rem;">👤</span>
-    <h1>Dashboard Guru</h1>
-  </div>
-
-  @if(session('success'))
+    @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show mb-3" style="border-radius:10px; font-size:0.875rem;">
       {{ session('success') }}
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
-  @endif
+    @endif
 
-  {{-- Stat Cards --}}
-  <div class="row g-3 mb-2">
-    <div class="col-auto">
-      <div class="stat-card">
-        <div class="stat-label">Total Users</div>
-        <div class="stat-value">{{ $totalSiswa }}</div>
+    {{-- Stat Cards --}}
+    <div class="row g-3 mb-2">
+      <div class="col-auto">
+        <div class="stat-card">
+          <div class="stat-label">Total Users</div>
+          <div class="stat-value">{{ $totalSiswa }}</div>
+        </div>
       </div>
-    </div>
-    <div class="col-auto">
-      <div class="stat-card">
-        <div class="stat-label">Total Tugas</div>
-        <div class="stat-value">{{ $totalTugas }}</div>
+      <div class="col-auto">
+        <div class="stat-card">
+          <div class="stat-label">Total Tugas</div>
+          <div class="stat-value">{{ $totalTugas }}</div>
+        </div>
       </div>
-    </div>
-    <div class="col-auto">
-      <div class="stat-card">
-        <div class="stat-label">Lihat Tugas</div>
-        <div class="mt-2">
-          <a href="{{ route('guru.semua-tugas.index') }}" class="btn-view">View Tasks</a>
+      <div class="col-auto">
+        <div class="stat-card">
+          <div class="stat-label">Lihat Tugas</div>
+          <div class="mt-2">
+            <a href="{{ route('guru.semua-tugas.index') }}" class="btn-view">View Tasks</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  {{-- Table --}}
-  <div class="table-card">
-    <form method="GET" action="{{ route('guru.dashboard') }}">
-      <input
-        type="text"
-        name="search"
-        class="search-input"
-        placeholder="🔍 Search User..."
-        value="{{ request('search') }}"
-      >
-    </form>
+    {{-- Table --}}
+    <div class="table-card">
+      <form method="GET" action="{{ route('guru.dashboard') }}">
+        <input
+          type="text"
+          name="search"
+          class="search-input"
+          placeholder="🔍 Search User..."
+          value="{{ request('search') }}">
+      </form>
 
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nama</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        @forelse ($users as $user)
-        <tr>
-          <td>{{ $user->id }}</td>
-          <td>{{ $user->name }}</td>
-          <td>{{ $user->email }}</td>
-          <td>
-            <span class="badge-role badge-{{ $user->role }}">
-              {{ ucfirst($user->role) }}
-            </span>
-          </td>
-          <td>
-            <div class="d-flex gap-2">
-              <a href="{{ route('guru.siswa.edit', $user->id) }}" class="btn-edit">✏ Edit</a>
-              <form action="{{ route('guru.siswa.destroy', $user->id) }}" method="POST" style="display:inline;"
-                onsubmit="return confirm('Hapus pengguna ini?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn-delete">🗑 Delete</button>
-              </form>
-            </div>
-          </td>
-        </tr>
-        @empty
-        <tr>
-          <td colspan="5" style="text-align:center; color:#6b7fa3; padding:1.5rem;">
-            Tidak ada user ditemukan.
-          </td>
-        </tr>
-        @endforelse
-      </tbody>
-    </table>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nama</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse ($users as $user)
+          <tr>
+            <td>{{ $user->id }}</td>
+            <td>{{ $user->name }}</td>
+            <td>{{ $user->email }}</td>
+            <td>
+              <span class="badge-role badge-{{ $user->role }}">
+                {{ ucfirst($user->role) }}
+              </span>
+            </td>
+            <td>
+              <div class="d-flex gap-2">
+                <a href="{{ route('guru.siswa.edit', $user->id) }}" class="btn-edit">✏ Edit</a>
+                <form action="{{ route('guru.siswa.destroy', $user->id) }}" method="POST" style="display:inline;"
+                  onsubmit="return confirm('Hapus pengguna ini?')">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="btn-delete">🗑 Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          @empty
+          <tr>
+            <td colspan="5" style="text-align:center; color:#6b7fa3; padding:1.5rem;">
+              Tidak ada user ditemukan.
+            </td>
+          </tr>
+          @endforelse
+        </tbody>
+      </table>
 
-    <div class="pagination-wrap">
-      <span>Menampilkan {{ $users->firstItem() }}–{{ $users->lastItem() }} dari {{ $users->total() }} pengguna</span>
-      {{ $users->withQueryString()->links('pagination::bootstrap-5') }}
+      <div class="pagination-wrap">
+        <span>Menampilkan {{ $users->firstItem() }}–{{ $users->lastItem() }} dari {{ $users->total() }} pengguna</span>
+        {{ $users->withQueryString()->links('pagination::bootstrap-5') }}
+      </div>
     </div>
+
   </div>
 
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

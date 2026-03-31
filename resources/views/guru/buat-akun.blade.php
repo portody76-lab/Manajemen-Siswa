@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Siswa — Dwira Harapan</title>
+  <title>Buat Akun — Dwira Harapan</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -114,21 +114,21 @@
       color: white;
     }
 
-    /* ================= MAIN ================= */
+    /* ================= MAIN CONTENT ================= */
     .main-content {
       margin-left: 180px;
       flex: 1;
-      padding: 2rem 2.5rem;
+      padding: 2rem 3rem;
     }
 
     .page-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-
+      gap: 0.75rem;
       margin-bottom: 2rem;
-      flex-wrap: wrap;
-      gap: 12px;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .page-header h1 {
@@ -143,26 +143,20 @@
       background: #ffffff;
       border: 1.5px solid #dce8f5;
       border-radius: 14px;
-
-      padding: 2rem;
-      max-width: 600px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
     }
 
-    .info-box {
-      background: #eaf4fc;
-      border: 1.5px solid #a8cde8;
-      border-radius: 10px;
-
-      padding: 0.75rem 1rem;
-      margin-bottom: 1.5rem;
-
-      font-size: 0.82rem;
-      color: #1a3a52;
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
 
-    .info-box span {
-      font-weight: 600;
-      color: #1a6fc4;
+    .form-full {
+      grid-column: 1 / -1;
     }
 
     .form-label {
@@ -206,10 +200,7 @@
 
     .divider {
       height: 1px;
-      background: linear-gradient(to right,
-          transparent,
-          #a8cde8,
-          transparent);
+      background: linear-gradient(to right, transparent, #a8cde8, transparent);
       margin: 1.5rem 0;
     }
 
@@ -254,24 +245,62 @@
       color: #1a3a52;
     }
 
-    .btn-hapus {
-      background: #fee2e2;
-      color: #b91c1c;
-      border: none;
+    /* ================= ROLE TOGGLE ================= */
+    .role-toggle {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 0;
+    }
 
+    .role-btn {
+      flex: 1;
+      padding: 0.65rem;
+
+      border: 1.5px solid #a8cde8;
       border-radius: 10px;
-      padding: 0.55rem 1.5rem;
+      background: #f0f6ff;
 
+      color: #4a6380;
       font-size: 0.875rem;
       font-weight: 600;
 
       cursor: pointer;
+      text-align: center;
       transition: all 0.2s;
     }
 
-    .btn-hapus:hover {
-      background: #fecaca;
-      color: #991b1b;
+    .role-btn:hover {
+      border-color: #1a6fc4;
+      color: #1a6fc4;
+    }
+
+    .role-btn.active-guru {
+      background: #1a6fc4;
+      border-color: #1a6fc4;
+      color: white;
+    }
+
+    .role-btn.active-siswa {
+      background: #059669;
+      border-color: #059669;
+      color: white;
+    }
+
+    /* ================= SISWA FIELD ================= */
+    .siswa-only {
+      display: none;
+    }
+
+    .siswa-only.show {
+      display: block;
+    }
+
+    .siswa-only-row {
+      display: none;
+    }
+
+    .siswa-only-row.show {
+      display: flex;
     }
   </style>
 </head>
@@ -282,9 +311,10 @@
     <div>
       <img src="{{ asset('img/logodwira.png') }}" alt="" width="150px">
     </div>
+
     <nav style="width:100%;">
-      <a href="{{ route('guru.dashboard') }}" class="nav-item-link active">🏠 Dashboard</a>
-      <a href="{{ route('guru.buat-akun') }}" class="nav-item-link">➕ Tambahkan Akun</a>
+      <a href="{{ route('guru.dashboard') }}" class="nav-item-link">🏠 Dashboard</a>
+      <a href="{{ route('guru.buat-akun') }}" class="nav-item-link active">➕ Tambahkan Akun</a>
       <a href="{{ route('guru.siswa.index') }}" class="nav-item-link">👥 Data Siswa</a>
       <a href="{{ route('guru.tugas.index') }}" class="nav-item-link">📋 Tugas Saya</a>
       <a href="{{ route('guru.tugas.create') }}" class="nav-item-link">➕ Tambah Tugas</a>
@@ -300,17 +330,17 @@
   </div>
 
   <div class="main-content">
-
     <div class="page-header">
-      <h1>✏️ Edit Siswa</h1>
-      <a href="{{ route('guru.siswa.index') }}" class="btn-batal">← Kembali</a>
+      <h1>🧑‍💼 Buat Akun</h1>
     </div>
 
     <div class="form-card">
 
-      <div class="info-box">
-        ✏️ Mengedit data siswa: <span>{{ $siswa->name }}</span>
+      @if(session('success'))
+      <div class="alert alert-success mb-4" style="border-radius:10px; font-size:0.85rem;">
+        ✅ {{ session('success') }}
       </div>
+      @endif
 
       @if($errors->any())
       <div class="alert alert-danger mb-4" style="border-radius:10px; font-size:0.85rem;">
@@ -322,79 +352,105 @@
       </div>
       @endif
 
-      <form action="{{ route('guru.siswa.update', $siswa->id) }}" method="POST">
+      <form action="{{ route('guru.buat-akun.store') }}" method="POST">
         @csrf
-        @method('PUT')
+
+        {{-- Role Toggle --}}
+        <div class="form-grid">
+          <div class="mb-3">
+            <label class="form-label">Role Akun</label>
+            <div class="role-toggle">
+              <div class="role-btn active-guru" id="btnGuru" onclick="setRole('guru')">
+                👨‍🏫 Guru
+              </div>
+              <div class="role-btn" id="btnSiswa" onclick="setRole('siswa')">
+                👨‍🎓 Siswa
+              </div>
+            </div>
+            <input type="hidden" name="role" id="roleInput" value="{{ old('role', 'guru') }}">
+            @error('role') <div class="error-text">{{ $message }}</div> @enderror
+          </div>
+        </div>
+
+        <div class="divider"></div>
 
         {{-- Nama --}}
         <div class="mb-3">
           <label for="name" class="form-label">Nama Lengkap</label>
-          <input type="text" id="name" name="name"
-            value="{{ old('name', $siswa->name) }}"
+          <input type="text" id="name" name="name" value="{{ old('name') }}"
             class="form-control @error('name') is-invalid @enderror"
-            placeholder="Nama lengkap siswa">
+            placeholder="Nama lengkap">
           @error('name') <div class="error-text">{{ $message }}</div> @enderror
         </div>
 
         {{-- Email --}}
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
-          <input type="email" id="email" name="email"
-            value="{{ old('email', $siswa->email) }}"
+          <input type="email" id="email" name="email" value="{{ old('email') }}"
             class="form-control @error('email') is-invalid @enderror"
             placeholder="email@example.com">
           @error('email') <div class="error-text">{{ $message }}</div> @enderror
         </div>
 
-        <div class="divider"></div>
-
-        {{-- Absen --}}
+        {{-- Password --}}
         <div class="mb-3">
-          <label for="absen" class="form-label">Nomor Absen</label>
-          <input type="number" id="absen" name="absen"
-            value="{{ old('absen', $siswa->absen) }}"
-            class="form-control @error('absen') is-invalid @enderror"
-            placeholder="Contoh: 12">
-          @error('absen') <div class="error-text">{{ $message }}</div> @enderror
+          <label for="password" class="form-label">Password</label>
+          <input type="password" id="password" name="password"
+            class="form-control @error('password') is-invalid @enderror"
+            placeholder="Minimal 8 karakter">
+          @error('password') <div class="error-text">{{ $message }}</div> @enderror
         </div>
 
-        {{-- Tingkat & Kelas --}}
-        <div class="row g-3 mb-4">
-          <div class="col-md-4">
-            <label for="tingkat" class="form-label">Tingkat</label>
-            <select id="tingkat" class="form-select" onchange="updateKelas()">
-              <option value="">-- Pilih --</option>
-              <option value="X">X</option>
-              <option value="XI">XI</option>
-              <option value="XII">XII</option>
-            </select>
+        {{-- Konfirmasi Password --}}
+        <div class="mb-3">
+          <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+          <input type="password" id="password_confirmation" name="password_confirmation"
+            class="form-control"
+            placeholder="Ulangi password">
+        </div>
+
+        {{-- Field khusus Siswa --}}
+        <div id="siswaFields">
+          <div class="divider siswa-only" id="dividerSiswa"></div>
+
+          {{-- Absen --}}
+          <div class="mb-3 siswa-only" id="fieldAbsen">
+            <label for="absen" class="form-label">Nomor Absen</label>
+            <input type="number" id="absen" name="absen" value="{{ old('absen') }}"
+              class="form-control @error('absen') is-invalid @enderror"
+              placeholder="Contoh: 12">
+            @error('absen') <div class="error-text">{{ $message }}</div> @enderror
           </div>
-          <div class="col-md-8">
-            <label for="kelas" class="form-label">Kelas</label>
-            <select id="kelas" name="kelas"
-              class="form-select @error('kelas') is-invalid @enderror" disabled>
-              <option value="">-- Pilih tingkat dulu --</option>
-            </select>
-            @error('kelas') <div class="error-text">{{ $message }}</div> @enderror
+
+          {{-- Tingkat & Kelas --}}
+          <div class="row g-3 mb-3 siswa-only-row" id="fieldKelas">
+            <div class="col-md-4">
+              <label for="tingkat" class="form-label">Tingkat</label>
+              <select id="tingkat" class="form-select" onchange="updateKelas()">
+                <option value="">-- Pilih --</option>
+                <option value="X">X</option>
+                <option value="XI">XI</option>
+                <option value="XII">XII</option>
+              </select>
+            </div>
+            <div class="col-md-8">
+              <label for="kelas" class="form-label">Kelas</label>
+              <select id="kelas" name="kelas"
+                class="form-select @error('kelas') is-invalid @enderror" disabled>
+                <option value="">-- Pilih tingkat dulu --</option>
+              </select>
+              @error('kelas') <div class="error-text">{{ $message }}</div> @enderror
+            </div>
           </div>
         </div>
 
         {{-- Buttons --}}
-        <div class="d-flex gap-3 flex-wrap">
-          <button type="submit" class="btn-simpan">💾 Simpan Perubahan</button>
-          <a href="{{ route('guru.siswa.index') }}" class="btn-batal">Batal</a>
+        <div class="d-flex gap-3 mt-2 form-full">
+          <button type="submit" class="btn-simpan">💾 Buat Akun</button>
+          <a href="{{ route('guru.dashboard') }}" class="btn-batal">Batal</a>
         </div>
 
       </form>
-
-      {{-- Hapus Siswa --}}
-      <div class="divider"></div>
-      <form action="{{ route('guru.siswa.destroy', $siswa->id) }}" method="POST"
-        onsubmit="return confirm('Yakin ingin menghapus siswa {{ $siswa->name }}?')">
-        @csrf @method('DELETE')
-        <button type="submit" class="btn-hapus">🗑 Hapus Siswa Ini</button>
-      </form>
-
     </div>
   </div>
 
@@ -406,7 +462,28 @@
       'XII': ['PH 1', 'PH 2', 'KULINER 1', 'KULINER 2', 'KULINER 3', 'TKC 1', 'TKC 2', 'PPLG 1']
     };
 
-    const oldKelas = "{{ old('kelas', $siswa->kelas) }}";
+    function setRole(role) {
+      document.getElementById('roleInput').value = role;
+
+      const btnGuru = document.getElementById('btnGuru');
+      const btnSiswa = document.getElementById('btnSiswa');
+
+      // Reset buttons
+      btnGuru.className = 'role-btn';
+      btnSiswa.className = 'role-btn';
+
+      if (role === 'guru') {
+        btnGuru.classList.add('active-guru');
+        // Sembunyikan field siswa
+        document.querySelectorAll('.siswa-only').forEach(el => el.classList.remove('show'));
+        document.querySelectorAll('.siswa-only-row').forEach(el => el.classList.remove('show'));
+      } else {
+        btnSiswa.classList.add('active-siswa');
+        // Tampilkan field siswa
+        document.querySelectorAll('.siswa-only').forEach(el => el.classList.add('show'));
+        document.querySelectorAll('.siswa-only-row').forEach(el => el.classList.add('show'));
+      }
+    }
 
     function updateKelas() {
       const tingkat = document.getElementById('tingkat').value;
@@ -424,16 +501,23 @@
         const opt = document.createElement('option');
         opt.value = val;
         opt.text = k;
-        if (oldKelas === val) opt.selected = true;
         kelasEl.appendChild(opt);
       });
     }
 
+    // Restore state saat validasi gagal
     document.addEventListener('DOMContentLoaded', function() {
-      if (!oldKelas) return;
-      const tingkat = oldKelas.split(' ')[0];
-      document.getElementById('tingkat').value = tingkat;
-      updateKelas();
+      const oldRole = "{{ old('role', 'guru') }}";
+      const oldKelas = "{{ old('kelas') }}";
+
+      setRole(oldRole);
+
+      if (oldKelas) {
+        const tingkat = oldKelas.split(' ')[0];
+        document.getElementById('tingkat').value = tingkat;
+        updateKelas();
+        document.getElementById('kelas').value = oldKelas;
+      }
     });
   </script>
 </body>
